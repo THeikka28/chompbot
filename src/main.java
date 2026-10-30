@@ -1,7 +1,9 @@
 public class main {
+    //need to make the way to assign the numbers to winners/losers array and compare that array
     public position [] boards;
     public int[] current;
     public int[][] winners;
+    public int[][] losers;
     public static void main() {
         main ex = new main();
     }
@@ -9,22 +11,27 @@ public class main {
 
         current = new int[3];
         current[0] = 3;
-        current[1] = 3;
-        current[2] = 3;
+        current[1] = 1;
+        current[2] = 0;
         boards= new position[20];
         winners = new int [3][20];
+        losers = new int [3][20];
         for(int x = 0; x< winners.length; x++)
         {
             for(int y=0; y< winners[0].length; y++) {
                 winners[x][y] = -1;
+                losers[x][y] = -1;
             }
         }
+        losers[0][0]= 1;
+        losers[1][0]= 0;
+        losers[2][0]= 0;
 
         for(int x = 0; x< boards.length; x++)
         {
             boards[x] = new position();
         }
-        for(int x = 18; x>-1;x--)
+        for(int x = 19; x>-1;x--)
         {
             for(int y = 0; y<boards[x].board.length; y++)
             {boards[x].board[y] = -1;
@@ -32,131 +39,52 @@ public class main {
 
         }
         printboards();
-        nextestboard(current,0);
 
+        for(int y=0; y< winners[0].length; y++) {
+            for (int x = 0; x < winners.length; x++) {
+                System.out.print(losers[x][y]);
+            }
+            System.out.println();
 
+        }
 
     }
 
     public void printboards()
     {
         int[] num = new int[3];
-        int pos =0;
-        for (int x = 0; x < num.length; x++)
-        {
-            num[x] = 3;
-        }
 
-        int[] helper = new int[num.length];
-
-        for (int x = 0; x < helper.length; x++)
-        {
-            helper[x] = num[x];
-        }
-
-        for (int a = 3; a >= 0; a--)
+        for (int a = 0; a <= 3; a++)
         {
             num[0] = a;
 
-            for (int b = a; b >= 0; b--)
+            for (int b = 0; b <= a; b++)
             {
                 num[1] = b;
 
-                for (int c = b; c >= 0; c--)
+                for (int c = 0; c <= b; c++)
                 {
                     num[2] = c;
 
                     for (int x = 0; x < num.length; x++)
                     {
                         System.out.print(num[x]);
+
                     }
                     System.out.println();
-                    pos = pos+1;
+
+                    nextestboard(num);
                 }
             }
         }
-       /*
-
-               int[] num = new int[3];
-
-        for (int x = 0; x < num.length; x++)
-        {
-            num[x] = 3;
-        }
-
-        int[] helper = new int[num.length];
-
-        for (int x = 0; x < helper.length; x++)
-        {
-            helper[x] = num[x];
-        }
-
-        for (int count = 0; count < 20; count++)
-        {
-            for (int x = 0; x < num.length; x++)
-            {
-                System.out.print(num[x]);
-            }
-            System.out.println();
-
-            int x = num.length - 1;
-
-            for (; x >= 0 && num[x] == 0; x--)
-            {}
-
-            if (x >= 0)
-            {
-                num[x]--;
-
-                for (int y = x + 1; y < num.length; y++)
-                {
-                    num[y] = num[x];
-                }
-            }
-        }
-
-       int[] num = new int[3];
-        for(int x = 0; x<num.length; x++)
-        {num[x] = 3;}
-        int[] helper = new int[num.length];
-        for(int x = 0; x<helper.length; x++)
-        {
-            helper[x] = num[x];
-        }
-
-
-        for(int x = num.length-1; x>-1; x--)
-        {
-            for(int y = num[x]; y>-1; y--)
-            {
-                num[x] = y;
-                for(int z = x; z<num.length; z++) {
-                    if (num[z] > num[x]) {
-                        num[z] = num[x];
-                    }
-                }
-                for(int z = 0; z<num.length; z++)
-                {
-                    System.out.print(num[z] + ", ");
-                }
-                System.out.println();
-            }
-            for(int k = x; k< num.length; k++)
-            {
-                num[k] = helper[k];
-            }
-        }
-
-        */
     }
 
-    public void nextestboard(int[] num, int board) {
+    public void nextestboard(int[] num) {
         int[] helper = new int[num.length];
         for(int x = 0; x<helper.length; x++)
         {
             helper[x] = num[x];
         }
-
         for (int x = num.length-1; x >-1 ; x--)
         {
             for (int y = num[x]-1; y>-1; y--)
@@ -167,53 +95,57 @@ public class main {
                         num[z] = num[x];
                     }
                 }
+                if(!choose(num))
+                {
+                    for(int j = 0; j< losers.length; j++)
+                    {
+                        for(int l=0; l< losers[0].length; l++) {
+                            losers[j][l] = helper[j];
 
-                for(int l = 0; l<num.length; l++)
-                {
-                    System.out.print(num[l] + ", ");
-                }
-                System.out.println();
-                if (choose(num))
-                {
-                    for(int i = 0; i<num.length; i++) {
-                        boards[i].board[board] = num[i];
+                        }
                     }
                 }
-
 
                 for(int k = x; k< num.length; k++)
                 {
                     num[k] = helper[k];
+
                 }
             }
-
-
         }
-
-
     }
 
 
     public boolean choose(int[] num)
     {
-        for(int y = 0; y<boards.length; y++)
-        {  boards[y].iswin = true;
-            for(int x = 0; x<boards[y].board.length; x++)
+        for(int y = 0; y<losers[0].length; y++)
+        {  boards[y].iswin = false;
+            for(int x = 0; x<losers.length; x++)
             {
-                if(boards[y].board[x] != num[x])
-                {boards[y].iswin = false;}
+                if(losers[x][y] != num[x])
+                {
+                    boards[y].iswin = true;
+                }
+
+            }
+            if(boards[y].iswin == false)
+            {
+                System.out.println("jfiosdjfklashdkfjnasd");
+
+                for(int x = 0; x<losers.length; x++)
+                {
+                    for(int j = 0; j<losers[0].length-y; j++) {
+                        if(losers[x][y+j] == -1) {
+                            System.out.println("gh");
+                            losers[x][y+j] = num[x];
+                            break;
+                        }
+                    }
+                }
+                return false;
             }
         }
-        if(num[0] == 1 && num[1] == 0)
-        {
-            System.out.println("YAYYYYYY");
-            return true;
-        }
-        else
-        {
-            System.out.println("cooked");
-            return false;
-        }
+        return true;
     }
 
 }
