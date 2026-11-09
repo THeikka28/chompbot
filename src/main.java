@@ -38,20 +38,12 @@ public class main {
             }
 
         }
-        printboards();
 
-        for(int y=0; y< winners[0].length; y++) {
-            for (int x = 0; x < winners.length; x++) {
-                System.out.print(losers[x][y]);
-            }
-            System.out.println();
-
-        }
-
+       printboards();
     }
 
     public void printboards()
-    {
+    { int pos = 0;
         int[] num = new int[3];
 
         for (int a = 0; a <= 3; a++)
@@ -69,40 +61,48 @@ public class main {
                     for (int x = 0; x < num.length; x++)
                     {
                         System.out.print(num[x]);
-
                     }
                     System.out.println();
-
-                    nextestboard(num);
+                    nextestboard(num, pos);
+                    pos++;
                 }
             }
         }
     }
 
-    public void nextestboard(int[] num) {
+    public void nextestboard(int[] num, int pos) {
         int[] helper = new int[num.length];
+        boolean isloser = true;
+
         for(int x = 0; x<helper.length; x++)
         {
             helper[x] = num[x];
         }
         for (int x = num.length-1; x >-1 ; x--)
         {
-            for (int y = num[x]-1; y>-1; y--)
-            {
+            for (int y = num[x]-1; y>-1; y--) {
                 num[x] = y;
-                for(int z = x; z<num.length; z++) {
+                for (int z = x; z < num.length; z++) {
                     if (num[z] > num[x]) {
                         num[z] = num[x];
                     }
                 }
-                if(!choose(num))
-                {
-                    for(int j = 0; j< losers.length; j++)
+                if (num[0] != 0) {
+                    if(choose(num))
                     {
-                        for(int l=0; l< losers[0].length; l++) {
-                            losers[j][l] = helper[j];
-
+                        for (int j = 0; j < winners.length; j++)
+                        {
+                        winners[j][pos] = helper[j];
                         }
+                        isloser = false;
+                        System.out.println("put in winner list");
+                        for (int k = 0; k < num.length; k++) {
+                            System.out.print(num[k] + ",");
+                        }
+                        System.out.println();
+                        System.out.print(x+1);                        System.out.print(y+1);
+                        System.out.println();
+                        System.out.println();
                     }
                 }
 
@@ -113,39 +113,39 @@ public class main {
                 }
             }
         }
+        if(isloser)
+        {
+            for (int j = 0; j < losers.length; j++) {
+                losers[j][pos] = helper[j];
+            }
+            System.out.println("put in loser list************");
+            System.out.println();
+        }
+
     }
 
 
     public boolean choose(int[] num)
-    {
+    { boolean iswin;
         for(int y = 0; y<losers[0].length; y++)
-        {  boards[y].iswin = false;
+        {  iswin = false;
+
+            boolean issame = true;
             for(int x = 0; x<losers.length; x++)
             {
-                if(losers[x][y] != num[x])
-                {
-                    boards[y].iswin = true;
+                if (losers[x][y] != num[x]) {
+                    issame = false;
                 }
-
             }
-            if(boards[y].iswin == false)
+            if(issame)
             {
-                System.out.println("jfiosdjfklashdkfjnasd");
-
-                for(int x = 0; x<losers.length; x++)
-                {
-                    for(int j = 0; j<losers[0].length-y; j++) {
-                        if(losers[x][y+j] == -1) {
-                            System.out.println("gh");
-                            losers[x][y+j] = num[x];
-                            break;
-                        }
-                    }
-                }
-                return false;
+                iswin = true;
+            }
+            if(iswin) {
+                return true;
             }
         }
-        return true;
-    }
+
+        return false;}
 
 }
